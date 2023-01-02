@@ -1,0 +1,19 @@
+import pyodbc 
+import datetime
+
+conn = pyodbc.connect("Driver={SQL Server Native Client 11.0};"
+                        "Server=127.0.0.1;"
+                        "Database=iot;"
+                        "uid=sa;pwd=<YourStrong@Passw0rd>")
+
+cursor = conn.cursor()
+
+date = datetime.datetime(2019,1,1,0,0)
+for i in range(1,100):
+    line = '''INSERT INTO HttpDataSink VALUES({key},1,1,'{first}','{second}',1,'{third}')'''
+    cursor.execute(line.format(key=i,first=datetime.datetime(2019,i%11+1,i%4+1,0,0).strftime("%Y-%m-%d"),second=datetime.datetime(2019,i%11+1,i%4+1,0,0).strftime("%Y-%m-%d"),third=datetime.datetime(2019,i%11+1,i%4+1,0,0).strftime("%Y-%m-%d")))
+    cursor.commit() 
+
+cursor.execute('SELECT * FROM HttpDataSink')
+for row in cursor:
+    print(row)

@@ -1,0 +1,87 @@
+Setup
+
+Step 1. Install Docker.
+
+There isn't a need to create an account. This should be fairly straightforward.
+
+
+
+Step 2. Created an mssql docker container by -:
+
+                   a.  Pull the following docker container via 
+
+                        docker pull mcr.microsoft.com/mssql/server:2019-GA-ubuntu-16.04
+
+                   b. Then run the container image by executing the following command -:                      
+
+           docker run -e "ACCEPT_EULA=Y" -e "SA_PASSWORD="Hari" -p 1433:1433 --name sql1 -d mcr.microsoft.com/mssql/server:2019-GA-ubuntu-16.04
+                   c. Check the status of your container by -:
+
+                        docker ps -a
+
+                       You should see an output similar to the following screenshot-:
+
+                       
+
+                        If the status says "Up" then its working.
+
+                   d. Use the following command to open an interactive bash shell inside the container -:
+
+                       docker exec -it sql1 "bash"          
+
+          /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P "<YourNewStrong@Passw0rd>" 
+                   e. If successful, you should get to an sql command prompt. Create a database iot and a table within that corresponds with our table in get_mssql_data.py -:              
+
+           create database iot
+           go
+           use iot
+           go
+           CREATE TABLE HttpDataSink (HttpDataSinkId BIGINT PRIMARY KEY, Request NVARCHAR(max), ProcesseDby NVARCHAR(200), ProcessingStartDate DATETIME2, ProcessingEndDate DATETIME2, ProcessingNote NVARCHAR(max), CreateDate DATETIME2)
+           go
+
+Step 3. To load the database with dummy data, I wrote a short python script that can be found here -:
+
+connectmssql.py
+
+Alternatively, one can always manually enter in the data using INSERT INTO HttpDataSink(...).
+
+
+
+Step 4. Download git and clone the connect-agent project to a local directory.
+
+
+
+Step 5. Edit the password and port tab in config\ get_mssql_config.json file to -:
+
+"password": "<YourStrong@Passw0rd>"
+For port, check your respective port under docker ps -a
+
+
+
+Step 6. Running the tests\get_mssql_data.py file should yield the contents of the databases in a csv under connect-agent\sample\. If done successfully, the output terminal should show-:
+
+
+
+
+
+At this moment we have the code running but we want to test network cpu saturation. To do this we will use multiple workers to connect to the database. To do this -:
+
+.
+
+Step 1. Create a 100 tables in the database. This is done by create_tables_msql function in auto_populate_mssqltable_files.py.
+
+
+
+Step 2. Now we need to add the created tables in our get_mssql_config.json file. Instead of doing this manually, just use the create_json_and_schema function again in auto_populate_mssqltable_files.py. Remember to set the same amount of tables here as in the previous create_tables_mssql function (in this case 100). 
+
+
+
+Step 3. Run the get_mssql_data.py file again and check if all the high watermark files are being generated without bottlenecks.
+
+
+
+
+
+
+
+

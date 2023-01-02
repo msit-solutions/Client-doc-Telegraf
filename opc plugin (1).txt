@@ -1,0 +1,196 @@
+
+Skip to end of metadata
+Created by Vishakhan, Abhinaya (ext), last modified on 08/Aug/22Go to start of metadata
+1.1. Overview:
+1.A Virtual OPC UA server is created and its metrics are visualized by an OPC UA client.
+
+Two python scripts are created (server.py and client.py).
+The server.py script creates a virtual OPC UA server and client.py script is used to fetch metrics from the server.
+Before executing the code, install the following :
+pip3 install freeopcua
+pip3 install cryptography           
+
+
+server.py
+
+from opcua import Server
+
+from random import randint
+
+import datetime
+
+import time
+
+server = Server()
+
+url = "opc.tcp://127.0.0.1:12345"
+
+server.set_endpoint(url)
+
+name = "OPCUA_SIMULATION_SERVER"
+
+addspace = server.register_namespace(name)
+
+node = server.get_objects_node()
+
+
+
+Param = node.add_object(addspace, "Parameters")
+
+Temp=Param.add_variable(addspace, "Temperature", 0)
+
+print(Temp.nodeid.NamespaceIndex)
+
+print(Temp.nodeid.NodeIdType.name)
+
+print(Temp.nodeid.Identifier)
+
+
+
+Press=Param.add_variable(addspace, "Pressure", 0)
+
+print(Press.nodeid.NamespaceIndex)
+
+print(Press.nodeid.NodeIdType.name)
+
+print(Press.nodeid.Identifier)
+
+#Time=Param.add_variable(addspace, "Time", 0)
+
+
+
+Temp.set_writable()
+
+Press.set_writable()
+
+#Time.set_writable()
+
+server.start()
+
+print("Server started at {}".format(url))
+
+while True:
+
+    Temperature = randint(10, 50)
+
+    Pressure = randint(200, 999)
+
+    #TIME = datetime.datetime.now()
+
+
+
+    print(Temperature, Pressure)
+
+
+
+    Temp.set_value(Temperature)
+
+    Press.set_value(Pressure)
+
+   # Time.set_value(TIME)
+
+
+
+    time.sleep(1)
+
+client.py
+
+import time
+
+from opcua import Client
+
+url = "opc.tcp://127.0.0.1:12345"
+
+client= Client(url)
+
+client.connect()
+
+print("Client Connected")
+
+#root=client.get_root_node()
+
+#root.get_children
+
+print(dir(client))
+
+print(client.get_values())
+
+
+
+while True:
+
+    Temp = client.get_node("ns=2;i=2")
+
+    Temperature = Temp.get_value()
+
+    print(Temperature)
+
+
+
+     Press = client.get_node("ns=2;i=3")
+
+    Pressure = Press.get_value()
+
+    print(Pressure)
+
+
+
+    #TIME = client.get_node("ns=2;i=4")
+
+    #Time = TIME.get_value()
+
+   #
+
+   #  print(Time)
+
+       time.sleep(1)
+
+
+
+2.Setting up an OPC UA plugin in a Telegraf container
+
+Add the plugin config to telegraf.
+       ~$ sudo cat /etc/telegraf/telegraf.conf | grep -A 20 "inputs.opcu"
+
+           [[inputs.opcua]]
+           # no configuration
+           name = "opcua"
+           endpoint = "opc.tcp://10.160.0.2:4840"
+           connect_timeout = "10s"
+           request_timeout = "5s"
+           security_policy = "None"
+           security_mode = "None"
+           nodes = [
+          {name="temp", namespace="2", identifier_type="i", identifier="2"},
+          {name="press", namespace="2", identifier_type="i", identifier="3"},
+         ]
+
+Logs
+        ~$  docker container logs dc3a4ce85c75
+
+               2022-08-05T13:59:45Z I! Using config file: /etc/telegraf/telegraf.conf
+               2022-08-05T13:59:45Z I! Starting Telegraf 1.23.2
+               2022-08-05T13:59:45Z I! Loaded inputs: mem opcua
+               2022-08-05T13:59:45Z I! Loaded aggregators:
+               2022-08-05T13:59:45Z I! Loaded processors:
+               2022 -08-05T13:59:45Z I! Loaded outputs: influxdb_v2
+               2022-08-05T12:0259:45Z I! Tags enabled: host=dc3a4ce85c75
+               2022-08-05T13:59:45Z I! [agent] Config: Interval:10s, Quiet:false, Hostname:"dc3a4ce85c75", Flush Interval:10s
+
+     To view the value for Temperature and Pressure  -docker exec -it dc3a4ce85c75 /bin/bash
+    bash-5.1# telegraf -test
+    2022-08-08T14:37:36Z I! Using config file: /etc/telegraf/telegraf.conf
+    2022-08-08T14:37:36Z I! Starting Telegraf 1.23.2
+    2022-08-08T14:37:36Z I! Loaded inputs: opcua
+    2022-08-08T14:37:36Z I! Loaded aggregators:
+    2022-08-08T14:37:36Z I! Loaded processors:
+    2022-08-08T14:37:36Z W! Outputs are not used in testing mode!
+    2022-08-08T14:37:36Z I! Tags enabled: host=dc3a4ce85c75
+    2022-08-08T14:37:36Z W! [inputs.opcua] Failed to load certificate: open /etc/telegraf/cert.pem: no such file or directory
+    > opcua,host=dc3a4ce85c75 Quality="OK (0x0)",temp=49i 1659969456000000000
+    > opcua,host=dc3a4ce85c75 Quality="OK (0x0)",press=396i 1659969456000000000
+
+
+The graph can be viewed on influxdb  as shown in the document below.  InfluxdbImage.docx
+1.1.1. References:
+       telegraf/README.md at release-1.23 · influxdata/telegraf · GitHub

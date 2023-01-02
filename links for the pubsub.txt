@@ -1,0 +1,90 @@
+https://github.com/davidgs/telegraf/tree/GoogleIoT#output-plugins
+
+https://github.com/davidgs/telegraf/tree/GoogleIoT
+
+https://dzone.com/articles/how-to-use-google-core-iot-with-influxdata
+
+https://gitlab.flux.utah.edu/emulab/telegraf/-/tree/c0e0da7ef6364ee682174e8cd3b218d6ff75ab69/plugins/outputs/cloud_pubsub
+
+https://github.com/influxdata/telegraf/blob/master/plugins/inputs/cloud_pubsub_push/README.md
+
+https://gitlab.flux.utah.edu/emulab/telegraf/-/blob/c0e0da7ef6364ee682174e8cd3b218d6ff75ab69/plugins/outputs/cloud_pubsub/pubsub.go
+
+https://spaghettidba.com/
+http://www.idevnews.com/views/images/uploads/evoices/211021_cloud_arch_influxdata_download.pdf
+https://github.com/influxdata/telegraf/blob/release-1.15/plugins/processors/execd/examples/multiplier_line_protocol/multiplier.conf
+
+https://www.srijn.net/telegraf-dynamic-tags/
+https://github.com/influxdata/influxdb-python
+https://github.com/srijan/telegraf-execd-pg-custom
+
+https://learn.microsoft.com/en-us/gaming/playfab/features/multiplayer/servers/vm-metrics
+https://github.com/marcv81/go-ble?ref=golangexample.com
+
+https://linuxize.com/post/how-to-install-pip-on-ubuntu-18.04/
+
+https://linuxconfig.org/install-pip-on-linux
+
+https://www.freecodecamp.org/news/how-to-setup-virtual-environments-in-python/
+
+https://www.geeksforgeeks.org/python-virtual-environment/
+https://github.com/influxdata/telegraf/tree/master/plugins/inputs/execd
+
+https://github.com/influxdata/telegraf/tree/master/plugins/processors/execd
+
+https://awesome.influxdata.com/docs/part-3/telegraf/
+
+https://community.influxdata.com/t/inputs-exec-plugin-for-python-script/15549
+https://github.com/paksu/pytelegraf
+
+https://github.com/influxdata/telegraf/blob/master/plugins/inputs/file/dev/docker-compose.yml
+
+https://community.influxdata.com/t/telegraf-update-1-3-and-how-to-write-plugins/1247
+https://github.com/influxdata/telegraf/tree/master/plugins/inputs/file
+
+https://github.com/influxdata/telegraf/blob/release-1.23/docs/DATA_FORMATS_INPUT.md
+
+https://github.com/influxdata/telegraf/tree/master/plugins/common/shim/testdata
+
+https://medium.com/mlearning-ai/time-series-forecasting-with-telegraf-d1506fa7e132
+
+https://docs.influxdata.com/telegraf/v1.23/data_formats/input/
+
+https://github.com/influxdata/telegraf/blob/release-1.23/plugins/outputs/cloud_pubsub/README.md
+
+https://docs.influxdata.com/telegraf/v1.23/plugins/#output-plugins
+
+https://docs.influxdata.com/telegraf/v1.23/plugins/#input-plugins
+
+https://github.com/influxdata/telegraf/blob/master/plugins/inputs/execd/README.md
+
+https://github.com/InfluxCommunity/tg-brew-anomaly
+https://github.com/InfluxCommunity/tg-brew-anomaly/blob/master/telegraf.conf
+
+https://docs.docker.com/compose/gettingstarted/
+https://www.cncf.io/blog/2022/06/10/docker-monitoring-tutorial-how-to-monitor-docker-with-telegraf-and-influxdb/
+
+
+mkdir /etc/telegraf
+
+sudo sh -c docker run --rm telegraf:1.23.2-alpine --input-filter mssql --output-filter cloud_pubsub config > /etc/telegraf/telegraf.conf'
+{
+
+[agent]
+[[inputs.sqlserver]]
+servers = [
+    "Server=192.168.1.10;Port=1433;User Id=<<USER-NAME>>;Password=<<PASSWORD>>;app name=telegraf;log=1;",
+  ]
+ database_type = "SQLServer"  }
+
+Replace <<USER-NAME>> with the user name for your SQL database.
+Replace <<PASSWORD>> with the password for your SQL database.
+https://cloud.google.com/anthos/docs/setup/set-up-google-cloud
+https://cloud.google.com/anthos/docs/setup/overview
+https://www.infoworld.com/article/3541324/what-is-google-cloud-anthos-managed-kubernetes-everywhere.html
+https://www.sqlservercentral.com/blogs/guide-for-set-up-of-telegraf-for-monitoring-sql-server-xplat
+https://medium.com/appgambit/terraform-with-jenkins-pipeline-439babe4095c
+https://docs.logz.io/shipping/prometheus-sources/telegraf-sql.html
+https://cloud.google.com/iam/docs/creating-managing-service-accounts
+https://cloud.google.com/pubsub/docs/publish-receive-messages-console
+
