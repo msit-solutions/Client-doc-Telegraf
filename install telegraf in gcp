@@ -1,0 +1,69 @@
+CREATION OF IMAGE OF TELEGRAF AS NON-ROOT USER
+
+GOOGLE CLOUD REGISTRY : (GCR)  is a service  in GOOGLE CLOUD PLATFORM (GCP) to manage your own docker container repository. This is fully managed service and you can store your custom container images as well as common images from other image repositories. Also, you can implement fine-grained access control on your private container registry using GCR.
+
+We can do this GOOGLE CLOUD SHELL or setup your workstation with (Make sure you have configured credentials and enabled billing for the project). For an easy usage, I am using Cloud Shell from GCP Console.
+PULL THE DOCKER IMAGE 
+$ docker pull telegraf : latest 
+ Docker pull [image name]:[tag or version]   it is the syntax
+  We can see the images locally
+$ docker image ls
+ REPOSITORY         TAG       IMAGE ID       CREATED          SIZE
+telegraf           latest    c11676beafdb   9 days ago       359MB
+Tag the images with Registry name 
+$ docker tag  telegraf gcr.io/docker-project-357006/telegraf:latest
+Docker  tag  HOSTNAME[gcr.io or us-gcr.io) /PROJECT-ID/IMAGE[image-name]:tag   it is syntax
+
+We can see the list of the images 
+$ docker image ls
+ REPOSITORY                                  TAG       IMAGE ID       CREATED          SIZE
+gcr.io/docker-project-357006/telegraf        latest    c11676beafdb    9 days ago       359MB
+
+
+Pushing the image to Registry
+$ docker push telegraf gcr.io/docker-project-357006/telegraf:latest
+docker push HOSTNAME/PROJECT-ID/IMAGE:tag  (syntax)
+ 
+*when you push your new docker image to a registry with a new hostname (gcr.io or us.gcr.io), Google Container Registry will creates a storage bucket for storing this image.  
+added a new container image in your own GCR and let’s see this on container registry GCP web console or via gcloud command.
+$gcloud container images list-tags
+$gcloud container images list-tags HOSTNAME/PROJECT-ID/IMAGE (syntax)
+we can see the below out put 
+gcr.io/docker-project-357006/telegraf        latest    c11676beafdb    9 days ago       359MB
+Pulling the Images from a registry
+$docker pull HOSTNAME  / PROJECT-ID / IMAGE @ IMAGE_DIGEST
+where:
+•	HOSTNAME is listed under Location in the console. It's one of four options: gcr.io, us.gcr.io, eu.gcr.io, or asia.gcr.io.
+•	PROJECT-ID is your Google Cloud console Project Id. If your project ID contains a colon (:), see .
+•	IMAGE is the image's name in Container Registry.
+•	TAG is the tag applied to the image. In a registry, tags are unique to an image.
+•	IMAGE_DIGEST is the hash value of the image contents. In console, click on the specific image to see its metadata. The digest is listed as the Image digest.
+To get the pull command for a specific image:
+1.	Click on the name of an image to go to the specific registry.
+2.	In the registry, check the box next to the version of the image that you want to pull.
+3.	Click SHOW PULL COMMAND on the top of the page.
+4.	Copy the pull command, which identifies the image using either the tag or the digest.
+
+Compute Engine 
+* Create a VM instance Using images stored in container Registry.
+
+*Create a VM instance specify the region zone ,Machine configuration ,firewall rules .
+
+*Install the docker in the vm instance .
+
+*By using the command we can display the image from gcr 
+$ gcloud container images list
+*By using the coomand we can pull the image from the gcr
+$gcloud docker -- pull gcr.io/ docker-project-357006/telegraf
+
+$ gcloud docker --pull Hostname/project-id/image-name/tag  (syntax)
+
+*By using the command, we can make the image to container 
+
+$docker run -d gcr.io/ docker-project-357006/telegraf
+
+
+
+$ docker pull tele$ docker pull telegraf : latest 
+graf : latest 
+
